@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">Order Management System</h1>
+        
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-700">Orders</h2>
+                <a href="{{ url_for('add_order') }}" 
+                   class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+                   Add New Order
+                </a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700">
+                            <th class="px-4 py-2 text-left">Order ID</th>
+                            <th class="px-4 py-2 text-left">Items</th>
+                            <th class="px-4 py-2 text-left">Delivery Date</th>
+                            <th class="px-4 py-2 text-left">Sender</th>
+                            <th class="px-4 py-2 text-left">Recipient</th>
+                            <th class="px-4 py-2 text-left">Address</th>
+                            <th class="px-4 py-2 text-left">Status</th>
+                            <th class="px-4 py-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ order[0][:8] }}...</td>
+                            <td class="px-4 py-2">{{ order[1] }}</td>
+                            <td class="px-4 py-2">{{ order[2] }}</td>
+                            <td class="px-4 py-2">{{ order[3] }}</td>
+                            <td class="px-4 py-2">{{ order[4] }}</td>
+                            <td class="px-4 py-2">{{ order[5] }}</td>
+                            <td class="px-4 py-2">
+                                <span class="inline-block px-2 py-1 rounded text-sm 
+                                    {% if order[6] == 'Ongoing' %} bg-yellow-100 text-yellow-800
+                                    {% else %} bg-green-100 text-green-800 {% endif %}">
+                                    {{ order[6] }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2 space-x-2">
+                                {% if order[6] == 'Ongoing' %}
+                                <a href="{{ url_for('mark_delivered', order_id=order[0]) }}" 
+                                   class="text-green-600 hover:text-green-800">Mark Delivered</a>
+                                {% endif %}
+                                <a href="{{ url_for('edit_order', order_id=order[0]) }}" 
+                                   class="text-blue-600 hover:text-blue-800">Edit</a>
+                                <a href="{{ url_for('delete_order', order_id=order[0]) }}" 
+                                   class="text-red-600 hover:text-red-800">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Action Logs</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700">
+                            <th class="px-4 py-2 text-left">Action</th>
+                            <th class="px-4 py-2 text-left">Performed By</th>
+                            <th class="px-4 py-2 text-left">Timestamp</th>
+                            <th class="px-4 py-2 text-left">Order ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ log[1] }}</td>
+                            <td class="px-4 py-2">{{ log[2] }}</td>
+                            <td class="px-4 py-2">{{ log[3] }}</td>
+                            <td class="px-4 py-2">{{ log[4][:8] }}...</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
